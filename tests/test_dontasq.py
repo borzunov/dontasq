@@ -70,6 +70,76 @@ class MethodsTest(unittest.TestCase):
         self.assertEqual(expected, actual)
 
 
+class QueryTest(unittest.TestCase):
+    def test_builtins(self):
+        actual = [1, 2, 4, 10, 20, 65].query() \
+            .where(lambda x: x % 2 == 0) \
+            .select(lambda x: x * 2) \
+            .to_list()
+        expected = [4, 8, 20, 40]
+        self.assertEqual(expected, actual)
+
+        actual = (-6, 2, 5).query() \
+            .select_many(lambda x: [x, x ** 2]) \
+            .to_tuple()
+        expected = (-6, 36, 2, 4, 5, 25)
+        self.assertEqual(expected, actual)
+
+        actual = 'Australia Canada Russia' \
+            .split() \
+            .query() \
+            .to_dictionary(key_selector=lambda word: word[:2].upper())
+        expected = {
+            'AU': 'Australia',
+            'CA': 'Canada',
+            'RU': 'Russia',
+        }
+        self.assertEqual(expected, actual)
+
+        actual = 'Formula1'.query().all(str.isalnum)
+        expected = True
+        self.assertEqual(expected, actual)
+
+        actual = 'abcdef'.query().to_list()
+        expected = ['a', 'b', 'c', 'd', 'e', 'f']
+        self.assertEqual(expected, actual)
+
+        test_str = 'kgsfidj_ddf'
+        self.assertEqual(len(test_str), test_str.query().count())
+
+    def test_dict_methods(self):
+        dictionary = {12: 22, 20: 2, 30: 3, 88: 2}
+
+        actual = dictionary.keys().query().sum()
+        expected = 150
+        self.assertEqual(expected, actual)
+
+        actual = dictionary.values().query() \
+                           .distinct() \
+                           .order_by() \
+                           .to_list()
+        expected = [2, 3, 22]
+        self.assertEqual(expected, actual)
+
+    def test_collections(self):
+        order = collections.deque()
+        order.append(5)
+        order.appendleft(3)
+        order.appendleft(6)
+
+        actual = order.query().select(lambda x: x + 2).to_list()
+        expected = [8, 5, 7]
+        self.assertEqual(expected, actual)
+
+    def test_itertools(self):
+        actual = itertools.count(1).query() \
+                          .select(lambda x: x * 3 - 2) \
+                          .take(6) \
+                          .to_list()
+        expected = [1, 4, 7, 10, 13, 16]
+        self.assertEqual(expected, actual)
+
+
 class CollisionTest(unittest.TestCase):
     def test_collision(self):
         actual = ', '.join(['London', 'Paris'])
