@@ -33,7 +33,7 @@ In some cases, this style helps to write functional-esque code that is more clea
 Details
 -------
 
-During import, ``dontasq`` looks for classes in the built-ins namespace, ``collections`` and ``itertools`` modules. If a class is an iterable and isn't a metaclass, the library will append all public methods of ``asq.queryables.Queryable`` to it in such a way that a method call:
+During import, ``dontasq`` looks for classes in the built-ins namespace, ``collections`` and ``itertools`` modules. If a class is an iterable and is not a metaclass, the library will append all public methods of ``asq.queryables.Queryable`` to it in such a way that a method call:
 
 .. code:: python
 
@@ -45,9 +45,9 @@ Will be equal to:
 
     >>> Queryable(instance).select(lambda x: x * 2)
 
-So the methods will be added to classes such as ``list``, ``str``, ``collections.OrderedDict``, or ``itertools.count``. You can find a list of all ``Queryable`` methods and their description in `asq documentation`_.
+For example, the methods will be added to ``list``, ``str``, ``collections.OrderedDict``, and ``itertools.count``. You can find a list of all ``Queryable`` methods and their description in `asq documentation`_.
 
-.. _asq documentation: http://docs.asq.googlecode.com/hg/1.0/html/reference/queryables.html#asq-queryables-queryable
+.. _asq documentation: https://asq.readthedocs.io/en/latest/reference/queryables.html#asq.queryables.Queryable
 
 If a class already contains an attribute with a coinciding name (e.g. ``str.join`` and ``list.count``), this attribute won't be replaced.
 
