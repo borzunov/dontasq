@@ -25,10 +25,16 @@ def get_method_proxy(method):
     return proxy
 
 
+def query(self):
+    return Queryable(self)
+
+
 def get_asq_methods():
-    return dict((name, get_method_proxy(attr))
-                for name, attr in vars(Queryable).items()
-                if not name.startswith('_') and callable(attr))
+    asq_methods = dict((name, get_method_proxy(attr))
+                        for name, attr in vars(Queryable).items()
+                        if not name.startswith('_') and callable(attr))
+    asq_methods['query'] = query
+    return asq_methods
 
 
 asq_methods = get_asq_methods()
